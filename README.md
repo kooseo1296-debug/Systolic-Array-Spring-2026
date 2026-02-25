@@ -68,3 +68,15 @@ To resolve the severe power inefficiency of the conventional design, we propose 
 * **Top-Level Pre-Detection:** A dedicated `Zero Detect [7:0]` module is integrated before the systolic array. It evaluates the incoming activations and generates a `ZeroFlag` for each row in advance. This centralized detection eliminates the need for redundant, power-hungry comparators inside every single PE.
 * **Operand Isolation (Data Gating):** Inside the PE, the `Do_Compute` signal controls the input registers (FFs). If a zero input is flagged (`ZeroFlag_In == 1`), invalid data is detected (`Valid_P_In == 0`), or the weight is zero (`W == 0`), the registers are disabled. This completely freezes the MAC datapath, preventing any unnecessary toggling.
 * **Datapath Bypassing:** When the computation is skipped, a `2-to-1 MUX` actively bypasses the MAC unit, forwarding the previous partial sum (`PSUM_In`) directly to the output (`PSUM_Out`).
+
+## Future Work & To-Do List
+
+This project is actively being developed to achieve a complete End-to-End AI inference demonstration.
+
+- [ ] **RTL Controller Upgrade for Scalability:** - Expand internal parameter registers (e.g., `IC`, `Offset`) from 8-bit to 16-bit to support large-scale matrix dimensions (e.g., $IC = 784$ for flattened images).
+  - Implement decoding logic for `_WH` (upper-bit) instructions to handle parameters exceeding the 8-bit ISA limit.
+- [ ] **HW/SW Co-Design Environment:** - Develop a Python-based testing framework for model training, 8-bit quantization, and testbench vector generation.
+  - Implement host-side post-processing logic (Bias addition, ReLU activation, and Re-quantization) between neural network layers.
+- [ ] **End-to-End MNIST Inference:** - Successfully map and execute a Multi-Layer Perceptron (MLP) on the Zero-Skipping NPU.
+  - Verify the final inference accuracy through Vivado behavioral simulation.
+- [ ] **Further Power Optimization (Optional):** - Explore advanced power reduction techniques, such as Clock Gating, to complement the current Data Gating mechanism.
