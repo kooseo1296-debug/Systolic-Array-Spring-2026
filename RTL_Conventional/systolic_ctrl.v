@@ -53,9 +53,9 @@ assign Out_FinishFlag = FinishFlag;
 reg FinishFlagIndicator;
 
 reg [2:0] WriteBackTimer;  //Turns ON when Data-WriteBack Instruction Inserted
-reg [`BIT_DATA-1:0] Offset;//Address of Datas after Executing into Psum
+reg [`BIT_WH-1:0] Offset;//Address of Datas after Executing into Psum
 reg [`BIT_DATA-1:0] SC;
-reg [`BIT_DATA-1:0] IC;
+reg [`BIT_WH-1:0] IC;
 reg [`BIT_DATA-1:0] OC; //Latched Inputs
 
 //Determine enb& addrb when WriteBack.
@@ -87,7 +87,8 @@ endgenerate
 reg [`PE_COL-1:0] WriteBackFilter, WriteBackFilter_1, WriteBackFilter_2, WriteBackFilter_3, WriteBackFilter_4;
 
 //Defined Exclusively For RUN state
-reg [`BIT_DATA-1:0] S_Count, IC_Count, OC_Count; //Matrix Tiling Parameters
+reg [`BIT_DATA-1:0] S_Count, OC_Count; //Matrix Tiling Parameters
+reg [`BIT_WH-1:0] IC_Count;
 reg RunState; //    0:    Load Weight, 1:    Load Input
 reg [`BIT_ROW_ID-1:0] RowCount;
 reg [4:0] FinishCount;
@@ -107,7 +108,7 @@ always @(posedge CLK) begin
         
         //~RUN
         if(states != 2'd3) begin
-            S_Count <= `BIT_DATA'd0; IC_Count <= `BIT_DATA'd0; OC_Count <= `BIT_DATA'd0; RunState <= 1'b0; 
+            S_Count <= `BIT_DATA'd0; IC_Count <= `BIT_WH'd0; OC_Count <= `BIT_DATA'd0; RunState <= 1'b0; 
             RowCount <= `BIT_ROW_ID'd0; FinishFlagIndicator <= 1'b0; FinishCount <= 5'd0; ValidOffCount <= 1'b0;//Default RUN parameters
         end
         
@@ -151,7 +152,11 @@ always @(posedge CLK) begin
                 FinishFlag <= 1'b0;
             end
             {`OPVALID, `OPCODE_PARAM, `PARAM_IC}: begin
-                IC <= Instr_In[0+:`BIT_DATA];
+                IC[0+:`BIT_DATA] <= Instr_In[0+:`BIT_DATA];
+                FinishFlag <= 1'b0;
+            end
+            {`OPVALID, `OPCODE_PARAM, `PARAM_IC_WH}: begin
+                IC[`BIT_DATA+:`BIT_DATA] <= Instr_In[0+:`BIT_DATA];
                 FinishFlag <= 1'b0;
             end
             {`OPVALID, `OPCODE_PARAM, `PARAM_OC}: begin
@@ -159,7 +164,10 @@ always @(posedge CLK) begin
                 FinishFlag <= 1'b0;
             end
             {`OPVALID, `OPCODE_PARAM, `PARAM_BASE_WSRAM}: begin
-                Offset <= Instr_In[0+:`BIT_DATA];
+                Offset[0+:`BIT_DATA] <= Instr_In[0+:`BIT_DATA];
+            end
+            {`OPVALID, `OPCODE_PARAM, `PARAM_BASE_WSRAM_WH}: begin
+                Offset[`BIT_DATA+:`BIT_DATA] <= Instr_In[0+:`BIT_DATA];
             end
         endcase
         
@@ -178,15 +186,15 @@ always @(posedge CLK) begin
         //Parameters
         case (Instr_In[`BIT_DATA +: (`BIT_INSTR - `BIT_DATA)])
             {`OPVALID, `OPCODE_WBPARAM, `PARAM_S}: begin
-                Out_DataWriteBack[0+:`BIT_DATA] <= SC;
+                Out_DataWriteBack <= {24'd0, SC};
                 Out_ValidWriteBack <= (SC != `BIT_DATA'd0);
             end
             {`OPVALID, `OPCODE_WBPARAM, `PARAM_IC}: begin
-                Out_DataWriteBack[0+:`BIT_DATA] <= IC;
-                Out_ValidWriteBack <= (IC != `BIT_DATA'd0);
+                Out_DataWriteBack <= {16'd0, IC};
+                Out_ValidWriteBack <= (IC != `BIT_WH'd0);
             end
             {`OPVALID, `OPCODE_WBPARAM, `PARAM_OC}: begin
-                Out_DataWriteBack[0+:`BIT_DATA] <= OC;
+                Out_DataWriteBack <= {24'd0, OC};
                 Out_ValidWriteBack <= (OC != `BIT_DATA'd0);
             end
         endcase
@@ -416,13 +424,13 @@ always @(posedge CLK) begin
                             if((IC_Count+j) < IC) Out_Disable_ZeroMask[j] <= 1'b1;
                             else Out_Disable_ZeroMask[j] <= 1'b0;
                         end
-                        Out_addra_InputSRAM <= (IC_Count[3+:(`BIT_DATA-3)]*SC + S_Count);
+                        Out_addra_InputSRAM <= (IC_Count[`BIT_WH-1:3]*SC + S_Count);
                         
                         //Systolic Array - Determine Valid & Address's Column[0]
                         if(OC_Count < OC) begin
                             Out_Valid_SysDffq[0] <= 1'b1;
-                            Out_addrP_SysDffq[0+:`BIT_ADDR] <= (OC_Count[3+:(`BIT_DATA-3)]*SC + S_Count + Offset);
-                            Out_addrb_PsumSRAM[0+:`BIT_DPSRAM] <= (OC_Count[3+:(`BIT_DATA-3)]*SC + S_Count + Offset);
+                            Out_addrP_SysDffq[0+:`BIT_ADDR] <= (OC_Count[`BIT_DATA-1:3]*SC + S_Count + Offset);
+                            Out_addrb_PsumSRAM[0+:`BIT_DPSRAM] <= (OC_Count[`BIT_DATA-1:3]*SC + S_Count + Offset);
                         end
                         else Out_Valid_SysDffq <= 1'b0;
                                                 
@@ -464,17 +472,15 @@ always @(posedge CLK) begin
     end
     else begin //RST == 1
         states <= 2'd0; //To Idle
-        SC <= `BIT_DATA'd0; IC <= `BIT_DATA'd0; OC <= `BIT_DATA'd0; //Reset Parameters
+        SC <= `BIT_DATA'd0; IC <= `BIT_WH'd0; OC <= `BIT_DATA'd0; Offset <= `BIT_WH'd0; //Reset Parameters
         FinishFlag <= 1'd0; //Reset Flag
         Out_ValidWriteBack <= 1'b0; Out_DataWriteBack <= `BIT_PSUM'd0;
-        Offset <= `BIT_DATA'd0;
         WriteBackTimer <= 3'd0;
         Out_enable_PsumLoader <= `PE_COL'd0;
     end
 end
 
 endmodule
-
 
 
 
