@@ -73,10 +73,14 @@ To resolve the severe power inefficiency of the conventional design, we propose 
 
 This project is actively being developed to achieve a complete End-to-End AI inference demonstration.
 
-- [ ] **RTL Controller Upgrade for Scalability:** - Expand internal parameter registers (e.g., `IC`, `Offset`) from 8-bit to 16-bit to support large-scale matrix dimensions (e.g., $IC = 784$ for flattened images).
-  - Implement decoding logic for `_WH` (upper-bit) instructions to handle parameters exceeding the 8-bit ISA limit.
-- [ ] **HW/SW Co-Design Environment:** - Develop a Python-based testing framework for model training, 8-bit quantization, and testbench vector generation.
-  - Implement host-side post-processing logic (Bias addition, ReLU activation, and Re-quantization) between neural network layers.
-- [ ] **End-to-End MNIST Inference:** - Successfully map and execute a Multi-Layer Perceptron (MLP) on the Zero-Skipping NPU.
-  - Verify the final inference accuracy through Vivado behavioral simulation.
-- [ ] **Further Power Optimization (Optional):** - Explore advanced power reduction techniques, such as Clock Gating, to complement the current Data Gating mechanism.
+## 🚀 Future Work & To-Do List
+
+This project is actively being developed to achieve a complete End-to-End AI inference demonstration.
+
+- [x] **RTL Controller Upgrade for Scalability:** - [x] Expanded internal parameter registers (e.g., `IC`, `Offset`) to 16-bit using a hybrid architecture to support large-scale matrix dimensions (e.g., $IC = 784$ for flattened images).
+  - [x] Implemented decoding logic for `_WH` (upper-bit) instructions to seamlessly handle parameters exceeding the 8-bit ISA limit without modifying the Host interface.
+- [ ] **HW/SW Co-Design Environment:** - [ ] Develop a Python-based testing framework for model training, 8-bit quantization, and testbench vector generation.
+  - [ ] Implement host-side post-processing logic (Bias addition, ReLU activation, and Re-quantization) between neural network layers.
+- [ ] **End-to-End MNIST Inference:** - [ ] Successfully map and execute a Multi-Layer Perceptron (MLP) on the Zero-Skipping NPU.
+  - [ ] Verify the final inference accuracy through Vivado behavioral simulation.
+- [ ] **Further Power Optimization (Optional):** - [ ] Explore advanced power reduction techniques, such as Clock-Gating, to complement the current operation-skip mechanism.
