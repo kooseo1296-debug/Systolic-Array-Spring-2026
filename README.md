@@ -73,7 +73,7 @@ To resolve the severe power inefficiency of the conventional design, we propose 
 
 This project is actively being developed to achieve a complete End-to-End AI inference demonstration.
 
-## 🚀 Future Work & To-Do List
+## Future Work & To-Do List
 
 This project is actively being developed to achieve a complete End-to-End AI inference demonstration.
 
