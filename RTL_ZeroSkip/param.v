@@ -34,6 +34,8 @@
 
 // data
 `define BIT_DATA    8
+`define BIT_WH      16
+
 `define BIT_PSUM    32
 `define TRG_ISRAM   `BIT_DATA'd0
 `define TRG_WSRAM   `BIT_DATA'd1
