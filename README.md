@@ -39,7 +39,7 @@ The controller execution flow is divided into four main states:
 <img width="60%" alt="image" src="https://github.com/user-attachments/assets/e17b4ac5-d2db-4b31-a30f-45f54e1d8c39" />
 
 1. **`IDLE` (State 00: Configuration & Writeback)**
-   * **Parameter Configuration:** Decodes instructions to set architectural matrix tiling parameters (`SC`, `IC`, `OC`) and SRAM base addresses (`Offset`).
+   * **Parameter Configuration:** Decodes instructions to set architectural matrix tiling parameters (`SC`, `IC`, `OC`) and Weight SRAM base address (`Offset`).
    * **Writeback:** Safely drains the accumulated partial sums (`Psum`) from the on-chip `PsumSRAM` to the external interface.
    
 2. **`LDINPUT` & `LDWEIGHT` (State 01 & 10: SRAM Buffering)**
