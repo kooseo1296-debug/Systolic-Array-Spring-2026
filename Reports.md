@@ -6,6 +6,7 @@ To objectively demonstrate the performance and efficiency of each architecture, 
 1. **Hardware Utilization:** Resource costs including LUTs, FFs, DSPs, and BRAMs.
 2. **Power Consumption:** Highly accurate, **SAIF (Switching Activity Interchange Format)** based power analysis reflecting actual switching activities during inference - the RUN state. The description includes the indication of the specific testbench file.
 3. **Timing Report:** Verification of setup/hold time violations at the target clock frequency.
+4. **Inference Results & Verification:** To validate the reliability and functional correctness of the designed NPU, a large-scale inference test was conducted using 9,999 images from the MNIST test dataset. The verification process focused on ensuring that the hardware logic maintains bit-level consistency even after implementing area and power optimizations.
 
 
 ---
@@ -43,6 +44,13 @@ This timing summary confirms that the baseline architecture successfully meets a
 * **Result:** All user-specified timing constraints are met.
 
 * The positive setup and hold slacks guarantee that there are no timing violations across the critical paths, ensuring the physical stability and reliability of the hardware design before applying any power-saving modifications.
+
+### 4. Inference Results & Verification
+
+**Quantitative Performance**
+* **Total Test Samples:** 9999
+* **Correct Predictions:** 8872
+* **Inference Accuracy:** 88.73%
 
 ---
 
