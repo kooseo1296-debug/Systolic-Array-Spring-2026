@@ -16,31 +16,33 @@ To objectively demonstrate the performance and efficiency of each architecture, 
 This project features a custom Processing Element (PE) and controller architecture designed to exploit input data sparsity. It inherently blocks unnecessary MAC (Multiply-Accumulate) operations and flip-flop toggling when zero-valued input data is detected.
 
 ### 1. Hardware Utilization
-<img width="678" height="544" alt="image" src="https://github.com/user-attachments/assets/c33ac844-baee-4c6c-adf7-93e367fe3f2b" />
+<img width="50%" alt="image" src="https://github.com/user-attachments/assets/4214a20c-e473-471a-ad47-595598953707" />
 
 
 ### 2. Power Consumption (SAIF-based)
-<img width="810" height="490" alt="image" src="https://github.com/user-attachments/assets/6a125ef9-7c32-4ec8-869e-bd9dfd693727" />
-<img width="814" height="136" alt="image" src="https://github.com/user-attachments/assets/2f7e79be-5bf9-46e3-b3e1-2074a3baa4f0" />
+<img width="50%" alt="image" src="https://github.com/user-attachments/assets/2b392401-8223-42a2-9adc-41a32b9c8112" />
+
+<img width="100%" alt="image" src="https://github.com/user-attachments/assets/203dd6ca-4bc1-41bd-a7a1-4b37cae25b5d" />
+
 
 **Description:**
 This SAIF-based power report represents the baseline power consumption of the default systolic array architecture **without** the operation-skip feature. 
 
 **Key Observations from the Baseline:**
-* **Total On-Chip Power:** Estimated at **0.233 W**, with dynamic power dominating the operational cost (**0.126 W**).
-* **Module-Level Breakdown:** As shown in the hierarchical view, the core `systolic` array module is responsible for **0.054 W** of the dynamic power. 
+* **Total On-Chip Power:** Estimated at **0.240 W**, with dynamic power dominating the operational cost (**0.130 W**).
+* **Module-Level Breakdown:** As shown in the hierarchical view, the core `systolic` array module is responsible for **0.056 W** of the dynamic power. 
 
 This baseline measurement serves as the reference point to validate the efficiency of the proposed Zero-Skipping architecture, which aims to drastically reduce the dynamic power consumed by the `systolic` module during sparse matrix multiplications.
 
 ### 3. Timing Report
-<img width="1043" height="268" alt="image" src="https://github.com/user-attachments/assets/b3e32c0a-a780-4046-866b-320fb68145c4" />
+<img width="70%" alt="image" src="https://github.com/user-attachments/assets/6b335be1-f782-483f-80d5-508be7684de1" />
 
 **Description:**
 This timing summary confirms that the baseline architecture successfully meets all timing constraints at the target clock frequency. 
 
 **Key Metrics:**
-* **Worst Negative Slack (WNS):** **+1.318 ns**
-* **Worst Hold Slack (WHS):** **+0.119 ns**
+* **Worst Negative Slack (WNS):** **+1.196 ns**
+* **Worst Hold Slack (WHS):** **+0.111 ns**
 * **Result:** All user-specified timing constraints are met.
 
 * The positive setup and hold slacks guarantee that there are no timing violations across the critical paths, ensuring the physical stability and reliability of the hardware design before applying any power-saving modifications.
