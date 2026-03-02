@@ -18,7 +18,7 @@ Modern AI/Deep Learning models exhibit high degrees of sparsity in their weights
 | **Systolic Array Size** | 8-by-8 | N-by-N spatial architecture dimension |
 | **Data Width** | 8-bit | Bit width for input activation and weights; this also stands for Input/Weight SRAM's data width |
 | **Accumulator Width** | 32-bit | Bit-width for MAC accumulation results; this also stands for Psum SRAM's data width |
-| **BRAM depth** | 4096/1024 | Block RAM depth of Input/Weight SRAM(16384) and Psum SRAM(1024) |
+| **BRAM depth** | 16384/1024 | Block RAM depth of Input/Weight SRAM(16384) and Psum SRAM(1024) |
 | **Target Device** | Xilinx Zynq-7000 | Target FPGA part used in Vivado |
 
 ### Matrix Tiling Parameters
