@@ -53,14 +53,14 @@ The controller execution flow is divided into four main states:
 
 
 ## Hardware Architectures
-### 1. Conventional
+### 0. Conventional(Default)
 <p> <img width="70%" alt="image" src="https://github.com/user-attachments/assets/b9194636-8e2a-4dca-87e1-f2ad00fcc7bd" />
  <img width="25%" alt="image" src="https://github.com/user-attachments/assets/d4d7f7d3-4cda-476f-8777-058b8527476e" /> </p>
 
 * **Boundary Masking:** The conventional Top-Level Architecture employs a `ZeroMask` module strictly for boundary handling. It forces out-of-bound input data to zero when the matrix dimension does not perfectly align with the array size (e.g., masking the 8th row if `IC = 7`).
 * **Redundant Computation:** Consequently, the conventional PE indiscriminately executes MAC operations regardless of the actual input values. Continuously computing $0 \times W$ forces the internal combinational logic and flip-flops to toggle, resulting in a massive waste of dynamic power.
 
-### 2. Zero-Skip Applied
+### 1. Zero-Skip
 <img width="70%" alt="image" src="https://github.com/user-attachments/assets/5e10781b-46e0-4129-a96a-254f78d0fcdb" /> <img width="50%" alt="image" src="https://github.com/user-attachments/assets/ed0af0dc-c1ee-4959-95a5-28d3509b69fe" />
 
 To resolve the severe power inefficiency of the conventional design, we propose a Zero-Skipping architecture equipped with hardware-level sparsity detection and operand isolation.
